@@ -1,6 +1,9 @@
 #ifndef _TCP_CLIENT_INTERFACE_HH
 #define _TCP_CLIENT_INTERFACE_HH
 
+#include <vector>
+#include <functional>
+
 namespace net{
 
 class tcp_client_interface{
@@ -14,6 +17,22 @@ public:
   tcp_client_interface(const tcp_client_interface&) = delete;
   //! assignment operator
   tcp_client_interface& operator=(const tcp_client_interface&) = delete;
+
+public:
+  //!
+  //! structure to store write requests information
+  //!
+  struct write_request {
+    //!
+    //! bytes to write
+    //!
+    std::vector<char> buffer;
+
+    //!
+    //! callback to be called on operation completion
+    //!
+    //async_write_callback_t async_write_callback;
+  };
 
 public:
   //!
@@ -36,6 +55,16 @@ public:
   //! \return whether the client is currently connected or not
   //!
   virtual bool is_connected(void) const = 0;
+
+public:
+
+  typedef std::function<void(const char*, std::size_t)> on_message_callback_t;
+
+public:
+  virtual void set_on_message_callback(const on_message_callback_t& cb) = 0;
+
+public:
+  virtual void sync_write(write_request& request) = 0;
 
 public:
 

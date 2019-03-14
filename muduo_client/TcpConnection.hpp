@@ -36,6 +36,7 @@ public:
   void send(const std::string& message);
   // void send(Buffer&& message); // C++11
   void send(Buffer* message);  // this one will swap data
+  void send(std::vector<char>&);
 
   void shutdown();
   void forceClose();

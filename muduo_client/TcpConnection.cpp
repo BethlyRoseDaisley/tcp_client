@@ -105,6 +105,21 @@ void TcpConnection::send(Buffer* message)
   }
 }
 
+void TcpConnection::send(std::vector<char>& v)
+{
+  if(m_state == kConnected)
+  {
+    if(p_loop->isInloopThread())
+    {
+      sendInLoop(v.data(), v.size());
+    }
+    else
+    {
+      p_loop->runInLoop(std::bind(&TcpConnection::sendInLoop, this, v.data(), v.size()));
+    }
+  }
+}
+
 void TcpConnection::sendInLoop(const void* data, size_t len)
 {
   p_loop->assertInLoopThread();

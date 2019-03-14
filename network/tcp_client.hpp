@@ -44,16 +44,28 @@ public:
   //! \return whether the client is currently connected or not
   //!
   virtual bool is_connected(void) const;
-  
+
+public:
+  void set_on_message_callback(const on_message_callback_t& cb);
+
 public:
 
+  void sync_write(write_request& request);
 
 private:
+
+  void on_connection(const TcpConnectionPtr& );
+
+  void on_message(const TcpConnectionPtr& , Buffer*, ssize_t );
+
   //!
   //!muduo net tcp_client
   //!
   std::unique_ptr<Net::TcpClient> m_client;
 
+  TcpConnectionPtr m_connection;
+
+  on_message_callback_t m_msg_cb;
 };
 
 }
